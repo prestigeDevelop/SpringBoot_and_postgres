@@ -19,38 +19,35 @@ import javax.sql.DataSource;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-        basePackages = "com.myjdbc.jdbcdata.pcstore.repository",
-        entityManagerFactoryRef = "pcStoreEntityManagerFactory",
-        transactionManagerRef = "pcStoreTransactionManager"
-)
-public class PcStoreDataSourceConfig {
-
+        basePackages = "com.myjdbc.jdbcdata.pg.repository",
+        entityManagerFactoryRef = "pgEntityManagerFactory",
+        transactionManagerRef = "pgTransactionManager")
+public class PgConfiguration {
     @Primary
-    @Bean(name = "pcStoreDataSource")
-    @ConfigurationProperties(prefix = "spring.datasource.pc-store")
+    @Bean(name = "pgDataSource")
+    @ConfigurationProperties(prefix = "spring.datasource.postgres")
     public DataSource dataSource() {
         return DataSourceBuilder.create().build();
     }
 
     @Primary
-    @Bean(name = "pcStoreEntityManagerFactory")
+    @Bean(name = "pgEntityManagerFactory")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(
             EntityManagerFactoryBuilder builder,
-            @Qualifier("pcStoreDataSource") DataSource dataSource
+            @Qualifier("pgDataSource") DataSource dataSource
     ) {
         return builder
                 .dataSource(dataSource)
-                .packages("com.myjdbc.jdbcdata.pcstore.entity")
-                .persistenceUnit("pcStore")
+                .packages("com.myjdbc.jdbcdata.pg.entity")
+                .persistenceUnit("pgPU")
                 .build();
     }
 
     @Primary
-    @Bean(name = "pcStoreTransactionManager")
+    @Bean(name = "pgTransactionManager")
     public PlatformTransactionManager transactionManager(
-            @Qualifier("pcStoreEntityManagerFactory") EntityManagerFactory entityManagerFactory
+            @Qualifier("pgEntityManagerFactory") EntityManagerFactory entityManagerFactory
     ) {
         return new JpaTransactionManager(entityManagerFactory);
     }
 }
-
