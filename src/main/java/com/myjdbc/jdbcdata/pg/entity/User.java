@@ -6,11 +6,13 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
+//@EqualsAndHashCode(exclude = {"id", "createdAt","updatedAt"})
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "\"users2\"", schema = "pgdemo")
+@Table(name = "\"users1\"", schema = "pgdemo")
 public class User {
 
     @Id
@@ -146,5 +148,18 @@ public class User {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return Objects.equals(getUsername(), user.getUsername()) && Objects.equals(getPasswordHash(), user.getPasswordHash()) && Objects.equals(getEmail(), user.getEmail()) && Objects.equals(getFirstName(), user.getFirstName()) && Objects.equals(getLastName(), user.getLastName()) && Objects.equals(getPhoneNumber(), user.getPhoneNumber()) && Objects.equals(getAddress(), user.getAddress()) && Objects.equals(getDateOfBirth(), user.getDateOfBirth()) && Objects.equals(getIsActive(), user.getIsActive()) && Objects.equals(getCreatedAt(), user.getCreatedAt()) && Objects.equals(getUpdatedAt(), user.getUpdatedAt());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUsername(), getPasswordHash(), getEmail(), getFirstName(), getLastName(), getPhoneNumber(), getAddress(), getDateOfBirth(), getIsActive(), getCreatedAt(), getUpdatedAt());
     }
 }

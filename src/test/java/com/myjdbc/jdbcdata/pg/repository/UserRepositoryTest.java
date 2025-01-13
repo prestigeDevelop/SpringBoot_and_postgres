@@ -3,6 +3,7 @@ package com.myjdbc.jdbcdata.pg.repository;
 import com.myjdbc.jdbcdata.pg.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
@@ -12,8 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 write a test for the UserRepository class
  */
 @SpringBootTest
-//@ActiveProfiles("test")
-//@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
+@ActiveProfiles("test")
 class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
@@ -54,5 +54,6 @@ class UserRepositoryTest {
 //            teseUser = userRepository.findById(22).orElse(null);
 //        userRepository.delete(teseUser);
 //        }
+
 
 }
