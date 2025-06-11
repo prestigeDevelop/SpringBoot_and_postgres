@@ -1,5 +1,6 @@
 package com.myjdbc.jdbcdata.pg.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -10,9 +11,11 @@ import java.util.Objects;
 
 @Entity
 //@EqualsAndHashCode(exclude = {"id", "createdAt","updatedAt"})
+//@RedisHash("User")
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "\"users1\"", schema = "pgdemo")
+//@Table(name = "\"users1\"", schema = "pgdemo")
+@Table(name = "\"users1\"")
 public class User {
 
     @Id
@@ -41,6 +44,7 @@ public class User {
     private String address;
 
     @Column(name = "date_of_birth")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
 
     @Column(name = "is_active", nullable = false)

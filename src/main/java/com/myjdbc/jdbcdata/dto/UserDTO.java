@@ -2,21 +2,24 @@ package com.myjdbc.jdbcdata.dto;
 
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class UserDTO {
+public class UserDTO implements java.io.Serializable {
+
     private Long id;
     private String username;
-    private String passwordHash;
+    private String password;
     private String email;
     private String firstName;
     private String lastName;
     private String phoneNumber;
     private String address;
-
+    private LocalDate dateOfBirth;
     public Long getId() {
         return id;
     }
@@ -33,12 +36,12 @@ public class UserDTO {
         this.username = username;
     }
 
-    public String getPasswordHash() {
-        return passwordHash;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getEmail() {
@@ -83,5 +86,13 @@ public class UserDTO {
 
     public String getFullName() {
         return firstName + " " + lastName;
+    }
+
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
 }

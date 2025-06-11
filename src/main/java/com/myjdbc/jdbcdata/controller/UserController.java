@@ -3,9 +3,8 @@ package com.myjdbc.jdbcdata.controller;
 import com.myjdbc.jdbcdata.dto.UserDTO;
 import com.myjdbc.jdbcdata.pg.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,5 +22,10 @@ public class UserController {
     public List<UserDTO> getAllUsers() {
         List<UserDTO> userDTOList = userService.getAllUsers();
         return userDTOList;
+    }
+
+    @PostMapping("/save")
+    public UserDTO saveUser(@RequestBody @Validated UserDTO userDTO) {
+        return userService.saveUser(userDTO);
     }
 }
