@@ -5,6 +5,7 @@ import com.myjdbc.jdbcdata.dto.UserMapper;
 import com.myjdbc.jdbcdata.pg.entity.User;
 import com.myjdbc.jdbcdata.pg.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,7 @@ public class UserService {
         return userMapper.toEntity(userDTO);
     }
 
-    //@Cacheable(value = "usersCache")
+    @Cacheable(value = "usersCache")
     public List<UserDTO> getAllUsers() {
         return userRepository.findAll().stream()
                 .map(userMapper::toDTO)

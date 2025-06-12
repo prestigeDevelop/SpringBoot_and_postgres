@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -18,10 +19,17 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                .authorizeHttpRequests()
-                .requestMatchers("/api/users/*").permitAll() // Allow public access to this endpoint
-                .anyRequest().authenticated(); // Require authentication for all other endpoints
+        http
+                .csrf().disable()  // Disable CSRF for API endpoints
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/users/**").permitAll()  // Allow access to user endpoints
+                        .requestMatchers("/test-redis").permitAll()
+                        .requestMatchers("/actuator/health").permitAll()  // Allow health check
+                        .anyRequest().authenticated()  // Secure all other endpoints
+                )
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)  // Recommended for APIs
+                );
 
         return http.build();
     }
