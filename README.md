@@ -93,7 +93,7 @@ The OpenAPI JSON specification is available at:
 - `GET /api/users/findAll` - Retrieve all users
 - `POST /api/users/create` - Create a new user
 - `GET /test-redis` - Test Redis connection
-
+  http://localhost:8080/test-redis
 ## Running Tests
 
 ```bash
