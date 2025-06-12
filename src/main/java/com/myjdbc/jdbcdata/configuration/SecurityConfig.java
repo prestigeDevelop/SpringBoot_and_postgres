@@ -25,6 +25,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/users/**").permitAll()  // Allow access to user endpoints
                         .requestMatchers("/test-redis").permitAll()
                         .requestMatchers("/actuator/health").permitAll()  // Allow health check
+                        .requestMatchers("/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui.html").permitAll()
                         .anyRequest().authenticated()  // Secure all other endpoints
                 )
                 .sessionManagement(session -> session
