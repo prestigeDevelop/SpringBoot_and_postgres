@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   app:
     image: 'postgres-springboot-app:latest'
@@ -14,7 +12,9 @@ services:
         condition: service_healthy
     ports:
       - "8080:8080"
+      - "5005:5005"
     environment:
+      JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgresqldb:5432/pgdemo
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres

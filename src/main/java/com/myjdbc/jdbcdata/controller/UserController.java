@@ -35,7 +35,35 @@ public class UserController {
     }
 
     @PostMapping("/save")
+    @Operation(summary = "Save a new user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "User successfully created"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data")
+    })
     public UserDTO saveUser(@RequestBody @Validated UserDTO userDTO) {
         return userService.saveUser(userDTO);
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Update an existing user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User successfully updated"),
+            @ApiResponse(responseCode = "404", description = "User not found"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data")
+    })
+    public UserDTO updateUser(@PathVariable Long id, @RequestBody @Validated UserDTO userDTO) {
+
+        return userService.updateUser(id, userDTO);
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Get user by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved user"),
+            @ApiResponse(responseCode = "404", description = "User not found")
+    })
+    public UserDTO getUserById(@PathVariable Long id) {
+        System.out.println("Fetching user with ID: " + id);
+        return userService.getUserById(id);
     }
 }

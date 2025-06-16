@@ -2,8 +2,10 @@ package com.myjdbc.jdbcdata.pg.service;
 
 import com.myjdbc.jdbcdata.dto.UserDTO;
 import com.myjdbc.jdbcdata.dto.UserMapper;
+import com.myjdbc.jdbcdata.exceptions.UserNotFoundException;
 import com.myjdbc.jdbcdata.pg.entity.User;
 import com.myjdbc.jdbcdata.pg.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -12,7 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
 @Service
+@Slf4j
 public class UserService {
     @Qualifier("jpaUserRepository")
     private final UserRepository userRepository;
@@ -61,5 +65,29 @@ public class UserService {
             // Catch-all for unexpected exceptions
             throw new RuntimeException("An unexpected error occurred while saving the user", e);
         }
+    }
+
+    public UserDTO updateUser(Long id, UserDTO userDTO) {
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+
+        // Update fields
+        existingUser.setUsername(userDTO.getUsername());
+        existingUser.setEmail(userDTO.getEmail());
+
+        // If password is provided, hash it and set it
+        if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
+            String hashedPassword = passwordEncoder.encode(userDTO.getPassword());
+            existingUser.setPasswordHash(hashedPassword);
+        }
+
+        return userMapper.toDTO(userRepository.save(existingUser));
+    }
+
+    public UserDTO getUserById(Long id) {
+        log.info("Hello Fetching user with id: {}", id);
+        return userRepository.findById(id)
+                .map(userMapper::toDTO)
+                .orElseThrow(() -> new UserNotFoundException(id));
     }
 }
