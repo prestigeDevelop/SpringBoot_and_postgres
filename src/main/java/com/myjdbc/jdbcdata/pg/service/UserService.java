@@ -7,6 +7,7 @@ import com.myjdbc.jdbcdata.pg.entity.User;
 import com.myjdbc.jdbcdata.pg.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -37,7 +38,8 @@ public class UserService {
         return userMapper.toEntity(userDTO);
     }
 
-    @Cacheable(value = "usersCache")
+    //@Cacheable(value = "usersCache")
+    @Cacheable(value = "User", key = "'all'")
     public List<UserDTO> getAllUsers() {
         return userRepository.findAll().stream()
                 .map(userMapper::toDTO)
@@ -47,6 +49,7 @@ public class UserService {
     @Transactional
     //@CacheEvict(value = "usersCache", key = "#userDTO.id")
     //@CachePut(value = "usersCache", key = "#userDTO.id")
+    @CacheEvict(value = "User", allEntries = true)
     public UserDTO saveUser(UserDTO userDTO) {
         try {
             // Validate password
@@ -67,6 +70,7 @@ public class UserService {
         }
     }
 
+    @CacheEvict(value = "User", key = "#id")
     public UserDTO updateUser(Integer id, UserDTO userDTO) {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
@@ -84,6 +88,7 @@ public class UserService {
         return userMapper.toDTO(userRepository.save(existingUser));
     }
 
+    @Cacheable(value = "User", key = "#id")
     public UserDTO getUserById(Integer id) {
         log.info("Hello Fetching user with id: {}", id);
         return userRepository.findById(id)
