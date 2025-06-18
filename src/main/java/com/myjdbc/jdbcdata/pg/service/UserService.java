@@ -67,7 +67,7 @@ public class UserService {
         }
     }
 
-    public UserDTO updateUser(Long id, UserDTO userDTO) {
+    public UserDTO updateUser(Integer id, UserDTO userDTO) {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
 
@@ -84,7 +84,7 @@ public class UserService {
         return userMapper.toDTO(userRepository.save(existingUser));
     }
 
-    public UserDTO getUserById(Long id) {
+    public UserDTO getUserById(Integer id) {
         log.info("Hello Fetching user with id: {}", id);
         return userRepository.findById(id)
                 .map(userMapper::toDTO)

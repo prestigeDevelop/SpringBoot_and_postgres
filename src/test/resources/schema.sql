@@ -7,6 +7,8 @@ create TABLE IF NOT EXISTS pgdemo.users1 (
     first_name VARCHAR(50),
     last_name VARCHAR(50),
     phone_number VARCHAR(15),
-    address VARCHAR(50),
+    address TEXT,
     date_of_birth DATE,
-    is_active BOOLEAN DEFAULT TRUE);
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL);

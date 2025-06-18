@@ -28,7 +28,7 @@ class UserRepositoryTest {
 
     @org.junit.jupiter.api.Test
     void findById() {
-        User user = userRepository.findById(1L).orElse(null);
+        User user = userRepository.findById(1).orElse(null);
         assertEquals("john_doe", user.getUsername());
 
     }

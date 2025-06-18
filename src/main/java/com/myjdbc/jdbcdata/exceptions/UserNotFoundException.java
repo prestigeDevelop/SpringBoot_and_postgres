@@ -9,7 +9,7 @@ public class UserNotFoundException extends RuntimeException {
         super();
     }
 
-    public UserNotFoundException(Long id) {
+    public UserNotFoundException(Integer id) {
         super("User not found with id: " + id);
     }
 

@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @EqualsAndHashCode
 public class UserDTO implements java.io.Serializable {
 
-    private Long id;
+    private Integer id;
     private String username;
     private String password;
     private String email;
@@ -20,11 +20,12 @@ public class UserDTO implements java.io.Serializable {
     private String phoneNumber;
     private String address;
     private LocalDate dateOfBirth;
-    public Long getId() {
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

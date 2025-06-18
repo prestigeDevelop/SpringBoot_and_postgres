@@ -1,6 +1,7 @@
 package com.myjdbc.jdbcdata.pg.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,7 @@ import java.util.Objects;
 
 @Entity
 //@EqualsAndHashCode(exclude = {"id", "createdAt","updatedAt"})
-//@RedisHash("User")
+//@RedisHash(value = "User", timeToLive = 3600L)
 @NoArgsConstructor
 @AllArgsConstructor
 //@Table(name = "\"users1\"", schema = "pgdemo")
@@ -20,7 +21,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "username", nullable = false, unique = true, length = 50)
     private String username;
@@ -58,11 +59,11 @@ public class User {
 
     // Getters and Setters
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -74,6 +75,7 @@ public class User {
         this.username = username;
     }
 
+    @JsonIgnore
     public String getPasswordHash() {
         return passwordHash;
     }

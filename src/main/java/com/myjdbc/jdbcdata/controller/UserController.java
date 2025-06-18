@@ -51,7 +51,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "User not found"),
             @ApiResponse(responseCode = "400", description = "Invalid input data")
     })
-    public UserDTO updateUser(@PathVariable Long id, @RequestBody @Validated UserDTO userDTO) {
+    public UserDTO updateUser(@PathVariable Integer id, @RequestBody @Validated UserDTO userDTO) {
 
         return userService.updateUser(id, userDTO);
     }
@@ -62,7 +62,7 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved user"),
             @ApiResponse(responseCode = "404", description = "User not found")
     })
-    public UserDTO getUserById(@PathVariable Long id) {
+    public UserDTO getUserById(@PathVariable Integer id) {
         System.out.println("Fetching user with ID: " + id);
         return userService.getUserById(id);
     }
