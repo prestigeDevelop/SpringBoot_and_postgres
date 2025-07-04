@@ -30,7 +30,10 @@ public class RedisTestController {
             RedisConnection connection = redisConnectionFactory.getConnection();
             String pingResponse = connection.ping();
             connection.close();
-
+            if (pingResponse == null || !pingResponse.equalsIgnoreCase("PONG")) {
+                response.put("error", "Unexpected ping response: " + pingResponse);
+                return response;
+            }
             response.put("status", "success");
             response.put("pingResponse", pingResponse);
             response.put("connectionFactoryClass", redisConnectionFactory.getClass().getName());
