@@ -90,7 +90,7 @@ public class UserService {
 
     @Cacheable(value = "User", key = "#id")
     public UserDTO getUserById(Integer id) {
-        log.info("Hello Fetching user with id: {}", id);
+       // log.info("Hello Fetching user with id: {}", id);
         return userRepository.findById(id)
                 .map(userMapper::toDTO)
                 .orElseThrow(() -> new UserNotFoundException(id));

@@ -40,7 +40,9 @@ public class UserController {
             @ApiResponse(responseCode = "201", description = "User successfully created"),
             @ApiResponse(responseCode = "400", description = "Invalid input data")
     })
-    public UserDTO saveUser(@RequestBody @Validated UserDTO userDTO) {
+
+    //POST /save?name=john
+    public UserDTO saveUser(@RequestBody @Validated UserDTO userDTO, @RequestParam String name) {
         return userService.saveUser(userDTO);
     }
 
