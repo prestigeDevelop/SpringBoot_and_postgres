@@ -2,6 +2,7 @@ package com.myjdbc.jdbcdata.service;
 
 import com.myjdbc.jdbcdata.entities.Joke;
 import com.myjdbc.jdbcdata.enums.JokeType;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
+import java.util.Arrays;
 
 //@ActiveProfiles("test")
 @SpringBootTest
@@ -31,7 +34,7 @@ class JokeServiceTest {
         // 1. Mock the WebClient call chain
         Joke[] mockJokes = {new Joke(JokeType.DAD, "setup1", "punchline1", 1),
                 new Joke(JokeType.DAD, "setup1", "punchline1", 2),
-                new Joke(JokeType.DAD, "setup2", "punchline2", 3)};
+                new Joke(JokeType.GENERAL, "setup2", "punchline2", 3)};
 
         Mockito.when(webClient.get()).thenReturn(requestHeadersUriSpec);
         Mockito.when(requestHeadersUriSpec.uri(Mockito.anyString())).thenReturn(requestHeadersUriSpec);
@@ -40,7 +43,12 @@ class JokeServiceTest {
 
         // 2. Test the service
         Mono<Joke[]> result = jokeService.getRandomJokes();
-
+        Joke[] actualJokes = result.block();
+        boolean isDadjoke = Arrays.stream(actualJokes).anyMatch(joke -> joke.getType().equals(JokeType.GENERAL));
+        System.out.println("Extracted jokes: " + Arrays.toString(actualJokes));
+        // Verify directly
+        Assertions.assertArrayEquals(mockJokes, actualJokes);
+        Assertions.assertEquals(3, actualJokes.length);
         // 3. Verify:
         // - The aspect logs the method call (check your console)
         // - The service returns expected data
@@ -62,5 +70,26 @@ class JokeServiceTest {
         StepVerifier.create(jokeService.getRandomJokes())
                 .expectError(RuntimeException.class)
                 .verify();
+    }
+
+    @Test
+    public void testGetRandomSingleJoke_Success() {
+        // 1. Mock the WebClient call chain
+        Joke mockJoke = new Joke(JokeType.DAD, "setup1", "punchline1", 1);
+
+        Mockito.when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        Mockito.when(requestHeadersUriSpec.uri(Mockito.anyString())).thenReturn(requestHeadersUriSpec);
+        Mockito.when(requestHeadersUriSpec.retrieve()).thenReturn(responseSpec);
+        Mockito.when(responseSpec.bodyToMono(Joke.class)).thenReturn(Mono.just(mockJoke));
+
+        // 2. Test the service
+        Mono<Joke> result = jokeService.getRandomSingleJoke();
+
+        // 3. Verify:
+        // - The aspect logs the method call (check your console)
+        // - The service returns expected data
+        StepVerifier.create(result)
+                .expectNext(mockJoke)
+                .verifyComplete();
     }
 }

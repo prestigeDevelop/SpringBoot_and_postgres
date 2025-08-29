@@ -29,8 +29,19 @@ public class JokeService {
                 .uri(jokeApiUrl + "/random_ten")
                 .retrieve()
                 .bodyToMono(Joke[].class)
+                .log("calling joke api with url: " + jokeApiUrl + "/random_ten")
                 .timeout(Duration.ofSeconds(5))// Optional: Add timeout
                 .switchIfEmpty(Mono.error(new RuntimeException("No jokes found")));
         return jokesList;
+    }
+
+    public Mono<Joke> getRandomSingleJoke() {
+        return webClient.get()
+                .uri(jokeApiUrl + "/jokes/random")
+                .retrieve()
+                .bodyToMono(Joke.class)
+                .log("calling joke api with url: " + jokeApiUrl + "/jokes/random")
+                .timeout(Duration.ofSeconds(5))// Optional: Add timeout
+                .switchIfEmpty(Mono.error(new RuntimeException("No joke found")));
     }
 }

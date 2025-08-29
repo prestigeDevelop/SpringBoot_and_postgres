@@ -21,7 +21,7 @@ public class JokesController {
     private final JokeService jokeService;
 
 
-    @GetMapping("/random")
+    @GetMapping("/random_ten")
     //generate swagger documentation
     @Operation(summary = "Get random jokes", description = "Fetches a list of random jokes from the external API")
     @ApiResponses(value = {
@@ -35,5 +35,20 @@ public class JokesController {
                 switchIfEmpty(Mono.error(new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "No jokes found")));
         return jokes;
+    }
+
+    @Operation(summary = "Get a random single joke", description = "Fetches a single random joke from the external API")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved a joke"),
+            @ApiResponse(responseCode = "500", description = "Internal server error"),
+            @ApiResponse(responseCode = "404", description = "No joke found"),
+            @ApiResponse(responseCode = "403", description = "Forbidden")
+    })
+    @GetMapping("/random-single")
+    public Mono<Joke> getRandomSingleJoke() {
+        Mono<Joke> joke = jokeService.getRandomSingleJoke().
+                switchIfEmpty(Mono.error(new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "No joke found")));
+        return joke;
     }
 }
