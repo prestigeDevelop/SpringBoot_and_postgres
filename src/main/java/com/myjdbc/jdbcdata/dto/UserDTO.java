@@ -1,5 +1,7 @@
 package com.myjdbc.jdbcdata.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Email;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -12,8 +14,13 @@ import java.time.LocalDate;
 public class UserDTO implements java.io.Serializable {
 
     private Integer id;
+    //@NotBlank(message = "Username is mandatory")
+    @Schema(description = "User's username", example = "JohnDoe123", type = "string", minLength = 3, maxLength = 50)
     private String username;
     private String password;
+    //@NotBlank(message = "Email is mandatory")
+    @Email
+    @Schema(description = "User's email address", example = "test@gmail.com", format = "email", type = "string")
     private String email;
     private String firstName;
     private String lastName;

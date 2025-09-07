@@ -24,6 +24,7 @@ public class UserService {
     private final UserMapper userMapper;
     private final BCryptPasswordEncoder passwordEncoder;
 
+
     public UserService(UserRepository userRepository, UserMapper userMapper, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
@@ -73,18 +74,16 @@ public class UserService {
     @CacheEvict(value = "User", key = "#id")
     public UserDTO updateUser(Integer id, UserDTO userDTO) {
         User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
 
-        // Update fields
-        existingUser.setUsername(userDTO.getUsername());
-        existingUser.setEmail(userDTO.getEmail());
-
-        // If password is provided, hash it and set it
+        // Update non-null fields using MapStruct
+        userMapper.updateUserFromDto(userDTO, existingUser);
+        log.info("Updating user: {}", existingUser);
+        // Handle password separately
         if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
             String hashedPassword = passwordEncoder.encode(userDTO.getPassword());
             existingUser.setPasswordHash(hashedPassword);
         }
-
         return userMapper.toDTO(userRepository.save(existingUser));
     }
 
