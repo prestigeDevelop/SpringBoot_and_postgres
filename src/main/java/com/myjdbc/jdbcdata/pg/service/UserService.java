@@ -8,6 +8,7 @@ import com.myjdbc.jdbcdata.pg.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -88,8 +89,9 @@ public class UserService {
     }
 
     @Cacheable(value = "User", key = "#id")
+    @CachePut(value = "User", key = "#id")
+    //@CacheEvict(value = "User", key = "'all'")
     public UserDTO getUserById(Integer id) {
-       // log.info("Hello Fetching user with id: {}", id);
         return userRepository.findById(id)
                 .map(userMapper::toDTO)
                 .orElseThrow(() -> new UserNotFoundException(id));
