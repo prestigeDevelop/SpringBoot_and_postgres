@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -15,6 +16,7 @@ import java.util.Objects;
 @Entity
 //@EqualsAndHashCode(exclude = {"id", "createdAt","updatedAt"})
 //@RedisHash(value = "User", timeToLive = 3600L)
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 //@Table(name = "\"users1\"", schema = "pgdemo")

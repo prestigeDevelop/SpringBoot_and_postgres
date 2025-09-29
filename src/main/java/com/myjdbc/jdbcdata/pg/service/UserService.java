@@ -2,6 +2,7 @@ package com.myjdbc.jdbcdata.pg.service;
 
 import com.myjdbc.jdbcdata.dto.UserDTO;
 import com.myjdbc.jdbcdata.dto.UserMapper;
+import com.myjdbc.jdbcdata.dto.UserUpdateDTO;
 import com.myjdbc.jdbcdata.exceptions.UserNotFoundException;
 import com.myjdbc.jdbcdata.pg.entity.User;
 import com.myjdbc.jdbcdata.pg.repository.UserRepository;
@@ -22,9 +23,8 @@ import java.util.List;
 public class UserService {
     @Qualifier("jpaUserRepository")
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
     private final BCryptPasswordEncoder passwordEncoder;
-
+    private final UserMapper userMapper;
 
     public UserService(UserRepository userRepository, UserMapper userMapper, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -42,10 +42,10 @@ public class UserService {
 
     //@Cacheable(value = "usersCache")
     @Cacheable(value = "User", key = "'all'")
-    public List<UserDTO> getAllUsers() {
-        return userRepository.findAll().stream()
-                .map(userMapper::toDTO)
-                .toList();
+    public List<User> getAllUsers() {
+        List<User> list = userRepository.findAll();
+        list.stream().forEach(System.out::println);
+        return list;
     }
 
     @Transactional
@@ -73,16 +73,16 @@ public class UserService {
     }
 
     @CacheEvict(value = "User", key = "#id")
-    public UserDTO updateUser(Integer id, UserDTO userDTO) {
+    public UserDTO updateUser(Integer id, UserUpdateDTO updateDTO) {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
 
         // Update non-null fields using MapStruct
-        userMapper.updateUserFromDto(userDTO, existingUser);
+        userMapper.updateUserFromUpdateDto(updateDTO, existingUser);
         log.info("Updating user: {}", existingUser);
         // Handle password separately
-        if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
-            String hashedPassword = passwordEncoder.encode(userDTO.getPassword());
+        if (updateDTO.getPassword() != null && !updateDTO.getPassword().isEmpty()) {
+            String hashedPassword = passwordEncoder.encode(updateDTO.getPassword());
             existingUser.setPasswordHash(hashedPassword);
         }
         return userMapper.toDTO(userRepository.save(existingUser));

@@ -2,7 +2,7 @@
 # Run Maven clean and install
 #RUN mvn clean install
 # Build stage
-FROM maven:latest AS build
+FROM maven:3.9.9-eclipse-temurin-17 AS build
 WORKDIR /app
 COPY pom.xml .
 COPY src ./src

@@ -27,7 +27,7 @@ public class SecurityConfig {
                 .csrf().disable()  // Disable CSRF for API endpoints
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/jokes/**").permitAll()
-                        .requestMatchers("/api/users/**").permitAll()  // Allow access to user endpoints
+                        .requestMatchers("/api/v1/users/**").permitAll()  // Allow access to user endpoints
                         .requestMatchers("/test-redis").permitAll()
                         .requestMatchers("/actuator/health").permitAll()  // Allow health check
                         .requestMatchers("/swagger-ui/**",

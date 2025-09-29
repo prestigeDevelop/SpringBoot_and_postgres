@@ -1,26 +1,32 @@
 package com.myjdbc.jdbcdata.controller;
 
 import com.myjdbc.jdbcdata.dto.UserDTO;
+import com.myjdbc.jdbcdata.dto.UserMapper;
+import com.myjdbc.jdbcdata.dto.UserUpdateDTO;
 import com.myjdbc.jdbcdata.pg.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/v1/users")
 @Tag(name = "User Management", description = "Operations pertaining to users")
-public class UserController {
+public class UserControllerV1 {
     private final UserService userService;
+    private final UserMapper userMapper;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserControllerV1(UserService userService, UserMapper userMapper) {
         this.userService = userService;
+        this.userMapper = userMapper;
     }
 
     @Operation(summary = "Get all users")
@@ -30,8 +36,8 @@ public class UserController {
     })
     @GetMapping("/findAll")
     public List<UserDTO> getAllUsers() {
-        List<UserDTO> userDTOList = userService.getAllUsers();
-        return userDTOList;
+        List<UserDTO> userDTOS = userService.getAllUsers().stream().map(userMapper::toDTO).toList();
+        return userDTOS;
     }
 
     @PostMapping("/save")
@@ -46,14 +52,14 @@ public class UserController {
         return userService.saveUser(userDTO);
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     @Operation(summary = "Update an existing user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User successfully updated"),
             @ApiResponse(responseCode = "404", description = "User not found"),
             @ApiResponse(responseCode = "400", description = "Invalid input data")
     })
-    public UserDTO updateUser(@PathVariable Integer id, @RequestBody @Validated UserDTO userDTO) {
+    public UserDTO updateUser(@PathVariable Integer id, @RequestBody @Validated UserUpdateDTO userDTO) {
 
         return userService.updateUser(id, userDTO);
     }
@@ -65,7 +71,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "User not found")
     })
     public UserDTO getUserById(@PathVariable Integer id) {
-        System.out.println("Fetching user with ID: " + id);
+        log.info("Fetching user with ID: " + id);
         return userService.getUserById(id);
     }
 }
