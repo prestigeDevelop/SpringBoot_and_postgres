@@ -29,17 +29,18 @@ public class SecurityConfig {
                         .requestMatchers("/api/jokes/**").permitAll()
                         .requestMatchers("/api/v1/users/**").permitAll()  // Allow access to user endpoints
                         .requestMatchers("/test-redis").permitAll()
+                        .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/actuator/health").permitAll()  // Allow health check
                         .requestMatchers("/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/swagger-ui.html").permitAll()
                         .anyRequest().authenticated()  // Secure all other endpoints
-                ).formLogin().successHandler((request, response, authentication) -> {
-                    response.sendRedirect("/"); // Custom redirect
-                })
-                .permitAll().and()
+                ).formLogin()  // Add form login
+                .defaultSuccessUrl("/management/info", true)
+                .permitAll()
+                .and()
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)  // Recommended for APIs
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)  // Recommended for APIs
                 );
 
         return http.build();
