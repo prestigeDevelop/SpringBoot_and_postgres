@@ -42,7 +42,6 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)  // Recommended for APIs
                 );
-
         return http.build();
     }
 
@@ -51,7 +50,7 @@ public class SecurityConfig {
         UserDetails user = User.builder()
                 .username("user")
                 .password(passwordEncoder().encode("password")) // Encrypt the password
-                .roles("USER")
+                .roles("USER", "ADMIN")
                 .build();
 
         return new InMemoryUserDetailsManager(user);

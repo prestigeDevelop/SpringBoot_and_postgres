@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -91,9 +92,7 @@ public class UserService {
     @Cacheable(value = "User", key = "#id")
     @CachePut(value = "User", key = "#id")
     //@CacheEvict(value = "User", key = "'all'")
-    public UserDTO getUserById(Integer id) {
-        return userRepository.findById(id)
-                .map(userMapper::toDTO)
-                .orElseThrow(() -> new UserNotFoundException(id));
+    public Optional<User> getUserById(Integer id) {
+        return userRepository.findById(id);
     }
 }

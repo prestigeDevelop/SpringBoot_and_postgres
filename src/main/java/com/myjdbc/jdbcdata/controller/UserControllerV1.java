@@ -3,6 +3,7 @@ package com.myjdbc.jdbcdata.controller;
 import com.myjdbc.jdbcdata.dto.UserDTO;
 import com.myjdbc.jdbcdata.dto.UserMapper;
 import com.myjdbc.jdbcdata.dto.UserUpdateDTO;
+import com.myjdbc.jdbcdata.exceptions.UserNotFoundException;
 import com.myjdbc.jdbcdata.pg.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -10,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -70,8 +72,11 @@ public class UserControllerV1 {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved user"),
             @ApiResponse(responseCode = "404", description = "User not found")
     })
-    public UserDTO getUserById(@PathVariable Integer id) {
+    public ResponseEntity<UserDTO> getUserById(@PathVariable Integer id) {
         log.info("Fetching user with ID: " + id);
-        return userService.getUserById(id);
+        return userService.getUserById(id)
+                .map(userMapper::toDTO)
+                .map(ResponseEntity::ok)
+                .orElseThrow(() -> new UserNotFoundException(id));
     }
 }
