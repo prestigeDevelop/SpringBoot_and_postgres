@@ -1,62 +1,88 @@
 <template>
   <div class="user-profile">
     <notification ref="notification" message="" type="success" />
-    <div class="user-profile__user-panel">
-      <h1 class="user-profile__username">@{{ user.username }}</h1>
-      <div class="user-profile__admin-badge" v-if="this.user.isAdmin">
-        Admin
-      </div>
-      <div class="user-profile__follower-count">
-        <strong>Followers: </strong> {{ followers }}
-      </div>
-      <form @submit.prevent="createNewTwoot" class="user-profile__create-twoot">
-        <label for="newToot">New Twoot ({{ newTwootCharacterCount }}/50)</label>
-        <textarea
-          id="newTwoot"
-          rows="4"
-          v-model="newTwootContent"
-          :class="{ exceeded: newTwootCharacterCount > 50 }"
-        ></textarea>
-        <div class="user-profile__create-twoot-type">
-          <label for="newTwootType">Type</label>
-          <select id="newTwootType" v-model="contentType">
-            <option
-              :value="option.value"
-              v-for="(option, index) in newTwootTypes"
-              :key="index"
+    <BRow>
+      <BCol md="6">
+        <div class="user-profile__user-panel">
+          <h1 class="user-profile__username">@{{ user.username }}</h1>
+          <div class="user-profile__admin-badge" v-if="this.user.isAdmin">
+            Admin
+          </div>
+          <div class="user-profile__follower-count">
+            <strong>Followers: </strong> {{ followers }}
+          </div>
+          <form
+            @submit.prevent="createNewTwoot"
+            class="user-profile__create-twoot"
+          >
+            <label for="newToot"
+              >New Twoot ({{ newTwootCharacterCount }}/50)</label
             >
-              {{ option.name }}
-            </option>
-          </select>
+            <textarea
+              id="newTwoot"
+              rows="4"
+              v-model="newTwootContent"
+              :class="{ exceeded: newTwootCharacterCount > 50 }"
+            ></textarea>
+            <div class="user-profile__create-twoot-type">
+              <label for="newTwootType">Type</label>
+              <select id="newTwootType" v-model="contentType">
+                <option
+                  :value="option.value"
+                  v-for="(option, index) in newTwootTypes"
+                  :key="index"
+                >
+                  {{ option.name }}
+                </option>
+              </select>
+            </div>
+            <BButton
+              type="submit"
+              :disabled="isNewTwootDisabled"
+              variant="primary"
+              size="lg"
+              pill
+              block
+              @click.stop="createNewTwoot"
+              >Twoot!</BButton
+            >
+          </form>
         </div>
-        <button :disabled="isNewTwootDisabled">Twoot!</button>
-      </form>
-    </div>
-    <div class="user-profile__twoots-wrapper">
-      <twootItem
-        v-for="twit in user.twits"
-        :key="twit.id"
-        :username="user.username"
-        :twoot="twit"
-        :followers="followers"
-        @favourite="toggleMakeFavourite"
-        @delete="deleteTwoot"
-      />
-    </div>
 
-    <div class="user-profile__buttons">
-      <button @click="followUser">push</button>
-      <button @click="resetFollowers">reset</button>
-    </div>
+        <div class="user-profile__twoots-wrapper">
+          <twootItem
+            v-for="twit in user.twits"
+            :key="twit.id"
+            :username="user.username"
+            :twoot="twit"
+            :followers="followers"
+            @favourite="toggleMakeFavourite"
+            @delete="deleteTwoot"
+          />
+        </div>
+      </BCol>
+    </BRow>
+    <BRow>
+      <BCol cols="12" md="12">
+        <div class="user-profile__buttons">
+          <BButton pill variant="primary" @click="followUser">push</BButton>
+          <BButton pill variant="primary" @click="resetFollowers"
+            >reset</BButton
+          >
+        </div>
+      </BCol>
+    </BRow>
   </div>
 </template>
 
 <script>
 import twootItem from "./TwootItem";
 import Notification from "./Notification";
+import { BRow, BCol, BButton } from "bootstrap-vue";
+
 export default {
   name: "UserProfile",
-  components: { twootItem, Notification },
+  components: { twootItem, Notification, BRow, BCol, BButton },
   data() {
     return {
       followers: 0,
@@ -141,9 +167,9 @@ export default {
 <style lang="scss" scoped>
 .user-profile {
   display: grid;
-  // flex-wrap: wrap;
-  grid-template-columns: 1fr 3fr;
-  grid-gap: 10px;
+  flex-wrap: wrap;
+  // grid-template-columns: 1fr 3fr;
+  // grid-gap: 10px;
   padding: 50px 5%;
 
   .user-profile__user-panel {
@@ -180,18 +206,21 @@ h1 {
   flex-direction: column;
 }
 .user-profile__buttons {
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  background-color: rgb(187, 181, 181);
-  border-radius: 5px;
-  border: 1px solid #dfe3e8;
-  margin-bottom: auto;
-  // float: left;
-  // display: block;
+  // display: flex;
+  // flex-direction: column;
+  // padding: 20px;
+  // background-color: rgb(187, 181, 181);
+  // border-radius: 5px;
+  // border: 1px solid #dfe3e8;
+  // margin-bottom: auto;
 }
 
 .exceeded {
   color: red;
+}
+.btn.disabled {
+  margin-top: 10px;
+  color: red;
+  background-color: rgb(187, 181, 181);
 }
 </style>
