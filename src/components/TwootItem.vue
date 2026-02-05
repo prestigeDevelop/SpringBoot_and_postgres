@@ -9,7 +9,7 @@
 
   <div class="twoot-item" @click="favourTwoot(twoot.id)">
     <div class="user-profile__twoot">
-      <div class="twoot-item__user">@{{ username }}</div>
+      <div class="twoot-item__user">@{{ username }}{{ postDate }}</div>
       <br />
       <div class="twoot-item__content">{{ twoot.content }}<br /></div>
 
@@ -35,6 +35,11 @@ export default {
     twoot: {
       type: Object,
       required: true,
+    },
+    postDate: {
+      type: Date,
+      required: false,
+      default: () => new Date(),
     },
   },
   methods: {
