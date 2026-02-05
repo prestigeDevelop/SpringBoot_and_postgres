@@ -10,10 +10,12 @@
   <div class="twoot-item" @click="favourTwoot(twoot.id)">
     <div class="user-profile__twoot">
       <div class="twoot-item__user">@{{ username }}</div>
-      <div class="twoot-item__content">
-        {{ twoot.content }}<br />
-        {{ twoot.id }}
-      </div>
+      <br />
+      <div class="twoot-item__content">{{ twoot.content }}<br /></div>
+
+      <button class="twoot-item__delete" @click.stop="deleteTwoot(twoot.id)">
+        Delete
+      </button>
     </div>
   </div>
 </template>
@@ -39,6 +41,9 @@ export default {
     favourTwoot(id) {
       this.$emit("favourite", id);
     },
+    deleteTwoot(id) {
+      this.$emit("delete", id);
+    },
   },
 };
 </script>
@@ -53,10 +58,21 @@ export default {
   transition: all 0.25s ease;
   border-radius: 25px;
   &:hover {
-    transform: scale(1.2, 1.1);
+    transform: scale(1, 1.05);
+    background-color: #cfd0d3;
   }
   .twoot-item__user {
     font-weight: bold;
+  }
+  .twoot-item__delete {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    float: right;
   }
 }
 </style>

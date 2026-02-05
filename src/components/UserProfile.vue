@@ -7,16 +7,15 @@
         Admin
       </div>
       <div class="user-profile__follower-count">
-        <strong>Followers: </strong> {{ follwers }}
+        <strong>Followers: </strong> {{ followers }}
       </div>
-      <form @submit.prevent="craeteNewTwoot" class="user-profile__create-twoot">
+      <form @submit.prevent="createNewTwoot" class="user-profile__create-twoot">
         <label for="newToot">New Twoot ({{ newTwootCharacterCount }}/50)</label>
         <textarea
           id="newTwoot"
           rows="4"
           v-model="newTwootContent"
-          @input="peintMe"
-          :class="{ exeeded: newTwootCharacterCount > 50 }"
+          :class="{ exceeded: newTwootCharacterCount > 50 }"
         ></textarea>
         <div class="user-profile__create-twoot-type">
           <label for="newTwootType">Type</label>
@@ -30,7 +29,7 @@
             </option>
           </select>
         </div>
-        <button :disabled="isDisabled">Twoot!</button>
+        <button :disabled="isNewTwootDisabled">Twoot!</button>
       </form>
     </div>
     <div class="user-profile__twoots-wrapper">
@@ -39,14 +38,10 @@
         :key="twit.id"
         :username="user.username"
         :twoot="twit"
-        :followers="follwers"
-        @favourite="toggelMakeFavourite"
+        :followers="followers"
+        @favourite="toggleMakeFavourite"
+        @delete="deleteTwoot"
       />
-    </div>
-
-    <div class="user-profile__buttons">
-      <button @click="followUser">push</button>
-      <button @click="resetFollowers">reset</button>
     </div>
 
     <div class="user-profile__buttons">
@@ -60,13 +55,12 @@
 import twootItem from "./TwootItem";
 import Notification from "./Notification";
 export default {
-  name: "App",
+  name: "UserProfile",
   components: { twootItem, Notification },
   data() {
     return {
-      follwers: 0,
+      followers: 0,
       newTwootContent: "",
-      isDisabled: false,
       contentType: "instant",
       newTwootTypes: [
         { value: "draft", name: "Draft" },
@@ -87,43 +81,32 @@ export default {
     };
   },
   watch: {
-    follwers(newnumber, old) {
+    followers(newnumber, old) {
       if (newnumber > old) {
         console.log(
           `${this.user.firstname} ${this.user.lastname} has follower joined`,
         );
       }
     },
-    newTwootCharacterCount() {
-      if (this.newTwootContent.length > 50) {
-        this.isDisabled = true;
-      } else {
-        this.isDisabled = false;
-      }
-    },
   },
   computed: {
-    fullName() {
-      return `${this.user.firstname} ${this.user.lastname}`;
-    },
     newTwootCharacterCount() {
       return this.newTwootContent.length;
     },
+    isNewTwootDisabled() {
+      return !this.newTwootContent.length || this.newTwootContent.length > 50;
+    },
   },
   methods: {
-    peintMe(value) {
-      console.log(value.data);
-      return value;
-    },
     followUser() {
-      this.follwers++;
-      if (this.follwers % 10 === 0 && this.follwers < 100) {
+      this.followers++;
+      if (this.followers > 0 && this.followers % 10 === 0) {
         if (
           this.$refs.notification &&
           typeof this.$refs.notification.notify === "function"
         ) {
           this.$refs.notification.notify(
-            `You have reached ${this.follwers} followers!`,
+            `You have reached ${this.followers} followers!`,
             "success",
             3000,
           );
@@ -131,12 +114,15 @@ export default {
       }
     },
     resetFollowers() {
-      this.follwers = 0;
+      this.followers = 0;
     },
-    toggelMakeFavourite(id) {
+    toggleMakeFavourite(id) {
       console.log(`Favourite Id #${id}`);
     },
-    craeteNewTwoot() {
+    deleteTwoot(id) {
+      this.user.twits = this.user.twits.filter((twit) => twit.id !== id);
+    },
+    createNewTwoot() {
       if (this.newTwootContent && this.contentType !== "draft") {
         this.user.twits.unshift({
           id: Date.now(),
@@ -205,7 +191,7 @@ h1 {
   // display: block;
 }
 
-.exeeded {
+.exceeded {
   color: red;
 }
 </style>
