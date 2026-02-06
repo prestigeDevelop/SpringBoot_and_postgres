@@ -11,7 +11,9 @@
     <div class="user-profile__twoot">
       <div class="twoot-item__user">@{{ username }}{{ postDate }}</div>
       <br />
-      <div class="twoot-item__content">{{ twoot.content }}<br /></div>
+      <div class="twoot-item__content">
+        {{ twoot.content }}<br />{{ twoot.id }}
+      </div>
 
       <button class="twoot-item__delete" @click.stop="deleteTwoot(twoot.id)">
         Delete

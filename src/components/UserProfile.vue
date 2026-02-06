@@ -51,7 +51,7 @@
               pill
               block
               @click.stop="createNewTwoot"
-              >Twoot!</BButton
+              >Post Twoot!</BButton
             >
           </form>
         </div>
@@ -62,6 +62,7 @@
             :key="twit.id"
             :username="user.username"
             :twoot="twit"
+            :disabled="false"
             :followers="followers"
             @favourite="toggleMakeFavourite"
             @delete="deleteTwoot"
@@ -109,6 +110,8 @@ export default {
       followers: 0,
       newTwootContent: "",
       contentType: "instant",
+      disabled: false,
+      currentUpdateId: null,
       newTwootTypes: [
         { value: "draft", name: "Draft" },
         { value: "instant", name: "Instant Twoot" },
@@ -170,22 +173,28 @@ export default {
       this.user.twits = this.user.twits.filter((twit) => twit.id !== id);
     },
     editTwoot(id) {
-      console.log(`Edit Id #${id}`);
       this.newTwootContent = this.user.twits.find(
         (twit) => twit.id === id,
       ).content;
       this.contentType = "instant";
-      this.user.twits = this.user.twits.filter((twit) => twit.id !== id);
-      console.log(this.user.twits);
+      this.currentUpdateId = id;
     },
     createNewTwoot() {
       if (this.newTwootContent && this.contentType !== "draft") {
+        if (this.currentUpdateId != null) {
+          this.deleteTwoot(this.currentUpdateId);
+        }
         this.user.twits.unshift({
-          id: Date.now(),
+          id: this.currentUpdateId == null ? Date.now() : this.currentUpdateId,
           content: this.newTwootContent,
         });
         this.newTwootContent = "";
       }
+
+      this.currentUpdateId = null;
+    },
+    subscribe() {
+      console.log("Subscribe clicked");
     },
   },
   mounted() {
