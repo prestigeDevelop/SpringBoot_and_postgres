@@ -2,7 +2,7 @@
   <div class="user-profile">
     <notification ref="notification" message="" type="success" />
     <BRow>
-      <BCol md="6">
+      <BCol cols="12" md="6">
         <div class="user-profile__user-panel">
           <h1 class="user-profile__username">@{{ user.username }}</h1>
           <div class="user-profile__admin-badge" v-if="this.user.isAdmin">
@@ -18,12 +18,19 @@
             <label for="newToot"
               >New Twoot ({{ newTwootCharacterCount }}/50)</label
             >
-            <textarea
+            <b-form-textarea
               id="newTwoot"
               rows="4"
+              as="textarea"
+              placeholder="What's happening?"
+              autofocus
+              required
+              trim
+              maxlength="51"
+              minlength="1"
               v-model="newTwootContent"
               :class="{ exceeded: newTwootCharacterCount > 50 }"
-            ></textarea>
+            ></b-form-textarea>
             <div class="user-profile__create-twoot-type">
               <label for="newTwootType">Type</label>
               <select id="newTwootType" v-model="contentType">
@@ -58,12 +65,26 @@
             :followers="followers"
             @favourite="toggleMakeFavourite"
             @delete="deleteTwoot"
+            @editTwoot="editTwoot"
           />
         </div>
       </BCol>
+      <BCol cols="12" md="6">
+        <BButton
+          type="submit"
+          :disabled="disabled"
+          variant="primary"
+          size="lg"
+          pill
+          block
+          @click.stop="subscribe"
+        >
+          Subscribe to see more</BButton
+        >
+      </BCol>
     </BRow>
     <BRow>
-      <BCol cols="12" md="12">
+      <BCol cols="12" md="6">
         <div class="user-profile__buttons">
           <BButton pill variant="primary" @click="followUser">push</BButton>
           <BButton pill variant="primary" @click="resetFollowers"
@@ -147,6 +168,15 @@ export default {
     },
     deleteTwoot(id) {
       this.user.twits = this.user.twits.filter((twit) => twit.id !== id);
+    },
+    editTwoot(id) {
+      console.log(`Edit Id #${id}`);
+      this.newTwootContent = this.user.twits.find(
+        (twit) => twit.id === id,
+      ).content;
+      this.contentType = "instant";
+      this.user.twits = this.user.twits.filter((twit) => twit.id !== id);
+      console.log(this.user.twits);
     },
     createNewTwoot() {
       if (this.newTwootContent && this.contentType !== "draft") {

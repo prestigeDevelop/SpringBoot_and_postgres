@@ -16,6 +16,16 @@
       <button class="twoot-item__delete" @click.stop="deleteTwoot(twoot.id)">
         Delete
       </button>
+      <!-- add edit button -->
+      <b-button
+        type="submit"
+        variant="secondary"
+        size="lg"
+        pill
+        block
+        @click.stop="editTwoot(twoot.id)"
+        >Edit Twoot</b-button
+      >
     </div>
   </div>
 </template>
@@ -48,6 +58,9 @@ export default {
     },
     deleteTwoot(id) {
       this.$emit("delete", id);
+    },
+    editTwoot(id) {
+      this.$emit("editTwoot", id);
     },
   },
 };
