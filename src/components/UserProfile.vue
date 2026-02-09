@@ -53,6 +53,17 @@
               @click.stop="createNewTwoot"
               >Post Twoot!</BButton
             >
+            <BButton
+              v-if="!isNewTwootDisabled"
+              type="submit"
+              :disabled="isNewTwootDisabled"
+              variant="primary"
+              size="lg"
+              pill
+              block
+              @click.stop="cancel"
+              >Cancel</BButton
+            >
           </form>
         </div>
 
@@ -111,6 +122,7 @@ export default {
       newTwootContent: "",
       contentType: "instant",
       disabled: false,
+      updateState: false,
       currentUpdateId: null,
       newTwootTypes: [
         { value: "draft", name: "Draft" },
@@ -173,6 +185,7 @@ export default {
       this.user.twits = this.user.twits.filter((twit) => twit.id !== id);
     },
     editTwoot(id) {
+      this.updateState = true;
       this.newTwootContent = this.user.twits.find(
         (twit) => twit.id === id,
       ).content;
@@ -183,6 +196,7 @@ export default {
       if (this.newTwootContent && this.contentType !== "draft") {
         if (this.currentUpdateId != null) {
           this.deleteTwoot(this.currentUpdateId);
+          this.updateState = false;
         }
         this.user.twits.unshift({
           id: this.currentUpdateId == null ? Date.now() : this.currentUpdateId,
@@ -195,6 +209,11 @@ export default {
     },
     subscribe() {
       console.log("Subscribe clicked");
+    },
+    cancel() {
+      this.newTwootContent = "";
+      this.currentUpdateId = null;
+      this.updateState = false;
     },
   },
   mounted() {
