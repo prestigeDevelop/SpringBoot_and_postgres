@@ -4,7 +4,13 @@
       "Bash(npm run serve:*)",
       "Bash(set NODE_OPTIONS=--openssl-legacy-provider)",
       "Bash(cmd /c \"set NODE_OPTIONS=--openssl-legacy-provider&& npm run serve\")",
-      "Bash(node --version:*)"
+      "Bash(node --version:*)",
+      "Bash(npm install:*)",
+      "Bash(del c:developmenttwitter_apppackage-lock.json)",
+      "Bash(npm config get:*)",
+      "Bash(npm config:*)",
+      "Bash(npm cache clean:*)",
+      "Bash(node -e:*)"
     ]
   }
 }

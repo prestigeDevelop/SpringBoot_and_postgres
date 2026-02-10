@@ -112,18 +112,18 @@
 <script>
 import twootItem from "./TwootItem";
 import Notification from "./Notification";
-import UserInfo from "../models/UserInfo";
+//import UserInfo from "../models/UserInfo";
 import { BRow, BCol, BButton } from "bootstrap-vue";
 
 export default {
   name: "UserProfile",
   components: { twootItem, Notification, BRow, BCol, BButton },
-  props: {
-    user: {
-      type: UserInfo,
-      default: () => UserInfo.createDefaultUser(),
-    },
-  },
+  // props: {
+  //   user: {
+  //     type: UserInfo,
+  //     default: () => UserInfo.createDefaultUser(),
+  //   },
+  // },
   data() {
     return {
       followers: 0,
@@ -173,6 +173,9 @@ export default {
     },
     subscriptionStatus() {
       return this.subscribed ? "Subscribed!" : "Subscribe to see more";
+    },
+    user() {
+      return this.$store.state.user;
     },
   },
   methods: {
