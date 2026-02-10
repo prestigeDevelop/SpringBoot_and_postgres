@@ -112,11 +112,18 @@
 <script>
 import twootItem from "./TwootItem";
 import Notification from "./Notification";
+import UserInfo from "../models/UserInfo";
 import { BRow, BCol, BButton } from "bootstrap-vue";
 
 export default {
   name: "UserProfile",
   components: { twootItem, Notification, BRow, BCol, BButton },
+  props: {
+    user: {
+      type: UserInfo,
+      default: () => UserInfo.createDefaultUser(),
+    },
+  },
   data() {
     return {
       followers: 0,
@@ -130,22 +137,22 @@ export default {
         { value: "draft", name: "Draft" },
         { value: "instant", name: "Instant Twoot" },
       ],
-      user: {
-        id: 1,
-        username: "golda6",
-        firstname: "avi",
-        lastname: "gold",
-        email: "avishaygold@gmail.com",
-        isAdmin: true,
-        twits: [
-          {
-            id: 1,
-            content: "Twitter is amazing",
-            postDate: new Date("2024-06-01T12:00:00"),
-          },
-          { id: 2, content: "Facebook is amazing" },
-        ],
-      },
+      //user: {
+      // id: 1,
+      // username: "golda6",
+      // firstname: "avi",
+      // lastname: "gold",
+      // email: "avishaygold@gmail.com",
+      // isAdmin: true,
+      // twits: [
+      //   {
+      //     id: 1,
+      //     content: "Twitter is amazing",
+      //     postDate: new Date("2024-06-01T12:00:00"),
+      //   },
+      //   { id: 2, content: "Facebook is amazing" },
+      // ],
+      // },
     };
   },
   watch: {
