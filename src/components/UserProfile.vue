@@ -204,27 +204,30 @@ export default {
       this.$store.commit("deleteTwoot", id);
     },
     editTwoot(id) {
-      this.updateState = true;
-      this.newTwootContent = this.user.twits.find(
-        (twit) => twit.id === id,
-      ).content;
+      const twitToEdit = this.user.twits.find((twit) => twit.id === id);
+
+      if (twitToEdit) {
+        this.newTwootContent = twitToEdit.content;
+      }
       this.contentType = "instant";
       this.currentUpdateId = id;
     },
     createNewTwoot() {
       if (this.newTwootContent && this.contentType !== "draft") {
         if (this.currentUpdateId != null) {
-          this.deleteTwoot(this.currentUpdateId);
-          this.updateState = false;
+          this.$store.commit("editTwoot", {
+            id: this.currentUpdateId,
+            content: this.newTwootContent,
+          });
+        } else {
+          this.$store.commit("addTwoot", {
+            id: Date.now(),
+            content: this.newTwootContent,
+            postDate: new Date(),
+          });
         }
-        this.$store.commit("addTwoot", {
-          id: this.currentUpdateId == null ? Date.now() : this.currentUpdateId,
-          content: this.newTwootContent,
-          postDate: new Date(),
-        });
         this.newTwootContent = "";
       }
-
       this.currentUpdateId = null;
     },
     subscribe() {
@@ -286,15 +289,15 @@ h1 {
   display: flex;
   flex-direction: column;
 }
-.user-profile__buttons {
-  // display: flex;
-  // flex-direction: column;
-  // padding: 20px;
-  // background-color: rgb(187, 181, 181);
-  // border-radius: 5px;
-  // border: 1px solid #dfe3e8;
-  // margin-bottom: auto;
-}
+// .user-profile__buttons {
+//   display: flex;
+//   flex-direction: column;
+//   padding: 20px;
+//   background-color: rgb(187, 181, 181);
+//   border-radius: 5px;
+//   border: 1px solid #dfe3e8;
+//   margin-bottom: auto;
+// }
 
 .exceeded {
   color: red;

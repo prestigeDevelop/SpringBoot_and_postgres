@@ -17,7 +17,6 @@ export default new Vuex.Store({
     deleteTwoot(state, id) {
       console.log("Deleting twoot with id:", id);
       state.user.twits = state.user.twits.filter((twoot) => twoot.id !== id);
-      //const index = this.state.user.twits.findIndex((twoot) => twoot.id === id);
     },
     editTwoot(state, { id, content }) {
       const twoot = state.user.twits.find((twoot) => twoot.id === id);
