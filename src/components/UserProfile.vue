@@ -201,7 +201,7 @@ export default {
       console.log(`Favourite Id #${id}`);
     },
     deleteTwoot(id) {
-      this.user.twits = this.user.twits.filter((twit) => twit.id !== id);
+      this.$store.commit("deleteTwoot", id);
     },
     editTwoot(id) {
       this.updateState = true;
@@ -217,7 +217,7 @@ export default {
           this.deleteTwoot(this.currentUpdateId);
           this.updateState = false;
         }
-        this.user.twits.unshift({
+        this.$store.commit("addTwoot", {
           id: this.currentUpdateId == null ? Date.now() : this.currentUpdateId,
           content: this.newTwootContent,
           postDate: new Date(),
