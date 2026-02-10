@@ -16,7 +16,7 @@
             class="user-profile__create-twoot"
           >
             <label for="newToot"
-              >New Twoot ({{ newTwootCharacterCount }}/50)</label
+              >New Twoot ({{ newTwootCharacterCount }}/500)</label
             >
             <b-form-textarea
               id="newTwoot"
@@ -26,10 +26,10 @@
               autofocus
               required
               trim
-              maxlength="51"
+              maxlength="501"
               minlength="1"
               v-model="newTwootContent"
-              :class="{ exceeded: newTwootCharacterCount > 50 }"
+              :class="{ exceeded: newTwootCharacterCount > 500 }"
             ></b-form-textarea>
             <div class="user-profile__create-twoot-type">
               <label for="newTwootType">Type</label>
@@ -73,6 +73,7 @@
             :key="twit.id"
             :username="user.username"
             :twoot="twit"
+            :postDate="twit.postDate"
             :disabled="false"
             :followers="followers"
             @favourite="toggleMakeFavourite"
@@ -91,7 +92,7 @@
           block
           @click.stop="subscribe"
         >
-          Subscribe to see more</BButton
+          {{ subscriptionStatus }}</BButton
         >
       </BCol>
     </BRow>
@@ -124,6 +125,7 @@ export default {
       disabled: false,
       updateState: false,
       currentUpdateId: null,
+      subscribed: false,
       newTwootTypes: [
         { value: "draft", name: "Draft" },
         { value: "instant", name: "Instant Twoot" },
@@ -136,7 +138,11 @@ export default {
         email: "avishaygold@gmail.com",
         isAdmin: true,
         twits: [
-          { id: 1, content: "Twitter is amazing" },
+          {
+            id: 1,
+            content: "Twitter is amazing",
+            postDate: new Date("2024-06-01T12:00:00"),
+          },
           { id: 2, content: "Facebook is amazing" },
         ],
       },
@@ -156,7 +162,10 @@ export default {
       return this.newTwootContent.length;
     },
     isNewTwootDisabled() {
-      return !this.newTwootContent.length || this.newTwootContent.length > 50;
+      return !this.newTwootContent.length || this.newTwootContent.length > 501;
+    },
+    subscriptionStatus() {
+      return this.subscribed ? "Subscribed!" : "Subscribe to see more";
     },
   },
   methods: {
@@ -201,6 +210,7 @@ export default {
         this.user.twits.unshift({
           id: this.currentUpdateId == null ? Date.now() : this.currentUpdateId,
           content: this.newTwootContent,
+          postDate: new Date(),
         });
         this.newTwootContent = "";
       }
@@ -209,6 +219,9 @@ export default {
     },
     subscribe() {
       console.log("Subscribe clicked");
+      // Implement subscription logic here
+      this.subscribed = true;
+      this.disabled = true;
     },
     cancel() {
       this.newTwootContent = "";

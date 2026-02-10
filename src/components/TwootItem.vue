@@ -9,11 +9,12 @@
 
   <div class="twoot-item" @click="favourTwoot(twoot.id)">
     <div class="user-profile__twoot">
-      <div class="twoot-item__user">@{{ username }}{{ postDate }}</div>
-      <br />
-      <div class="twoot-item__content">
-        {{ twoot.content }}<br />{{ twoot.id }}
+      <div class="twoot-item__user">
+        @{{ username }}
+        <span class="twoot-item__date">· {{ relativeDate }}</span>
       </div>
+      <br />
+      <div class="twoot-item__content">{{ twoot.content }}<br /></div>
 
       <button class="twoot-item__delete" @click.stop="deleteTwoot(twoot.id)">
         Delete
@@ -54,6 +55,23 @@ export default {
       default: () => new Date(),
     },
   },
+  computed: {
+    relativeDate() {
+      const diff = Math.round((this.postDate - new Date()) / 1000);
+      if (Math.abs(diff) < 60) return this.formattedPostDate();
+      if (Math.abs(diff) < 3600) return `${Math.round(diff / 60)}m ago`;
+      if (Math.abs(diff) < 86400) return `${Math.round(diff / 3600)}h ago`;
+      if (Math.abs(diff) < 2592000) return `${Math.round(diff / 86400)}d ago`;
+      if (Math.abs(diff) < 31536000)
+        return `${Math.round(diff / 2592000)}mo ago`;
+      if (Math.abs(diff) < 315360000)
+        return `${Math.round(diff / 31536000)}y ago`;
+      return this.postDate.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+      });
+    },
+  },
   methods: {
     favourTwoot(id) {
       this.$emit("favourite", id);
@@ -63,6 +81,10 @@ export default {
     },
     editTwoot(id) {
       this.$emit("editTwoot", id);
+    },
+    formattedPostDate() {
+      const options = { year: "numeric", month: "short", day: "numeric" };
+      return new Date(this.postDate).toLocaleDateString(undefined, options);
     },
   },
 };
@@ -83,6 +105,12 @@ export default {
   }
   .twoot-item__user {
     font-weight: bold;
+    color: #333;
+  }
+  .twoot-item__date {
+    font-weight: normal;
+    color: #999;
+    margin-left: 4px;
   }
   .twoot-item__delete {
     background-color: red;

@@ -3,7 +3,7 @@
     <div class="nav-container">
       <router-link to="/" class="brand">Home</router-link>
 
-      <div class="nav-links brand">
+      <div class="nav-links">
         <router-link to="/flex">flex</router-link>
         <router-link to="/userProfile">User Profile</router-link>
       </div>
@@ -24,8 +24,10 @@ export default {
 }
 
 .nav-container {
+  width: 100%;
   max-width: 1170px;
   margin: 0 auto;
+  padding: 0 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
