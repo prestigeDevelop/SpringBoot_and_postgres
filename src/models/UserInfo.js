@@ -15,7 +15,13 @@ export default class UserInfo {
       "golda6",
       "",
       false,
-      [{ id: 2, content: "Facebook is amazing" }],
+      [
+        {
+          id: 2,
+          content: "Facebook is amazing",
+          postDate: new Date("2024-06-01T12:00:00"),
+        },
+      ],
       "avi",
       "gold",
     );
