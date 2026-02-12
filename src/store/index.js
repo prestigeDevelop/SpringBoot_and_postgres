@@ -6,6 +6,26 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     user: UserInfo.createDefaultUser(),
+    users: [
+      {
+        id: 1,
+        username: "golda6",
+        firstname: "avi",
+        lastname: "gold",
+        email: "avishaygold@gmail.com",
+        isAdmin: true,
+        twits: [
+          {
+            id: 1,
+            content: "Twitter is amazing",
+            postDate: new Date("2024-06-01T12:00:00"),
+          },
+          { id: 2, content: "Facebook is amazing" },
+        ],
+        joinDate: new Date("2024-06-01T12:00:00"),
+      },
+    ],
+    selectedRegistrationType: "new",
   },
   mutations: {
     setUser(state, user) {
@@ -24,6 +44,12 @@ export default new Vuex.Store({
         twoot.content = content;
       }
     },
+    setSelectedRegistrationType(state, registrationType) {
+      state.selectedRegistrationType = registrationType;
+    },
+    addUserToUsers(state, user) {
+      state.users.push({ ...user, id: Date.now() });
+    },
   },
   actions: {
     updateUser({ commit }, user) {
@@ -33,6 +59,9 @@ export default new Vuex.Store({
   getters: {
     getUser(state) {
       return state.user;
+    },
+    existingUsers(state) {
+      return state.users;
     },
   },
 });

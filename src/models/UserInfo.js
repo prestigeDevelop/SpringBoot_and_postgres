@@ -1,5 +1,14 @@
 export default class UserInfo {
-  constructor(id, username, email, isAdmin, twits, firstname, lastname) {
+  constructor(
+    id,
+    username,
+    email,
+    isAdmin,
+    twits,
+    firstname,
+    lastname,
+    joinDate = new Date(),
+  ) {
     this.id = id;
     this.username = username;
     this.email = email;
@@ -7,6 +16,7 @@ export default class UserInfo {
     this.twits = twits || [];
     this.firstname = firstname;
     this.lastname = lastname;
+    this.joinDate = joinDate;
   }
 
   static createDefaultUser() {
@@ -25,5 +35,9 @@ export default class UserInfo {
       "avi",
       "gold",
     );
+  }
+
+  toLocaleDateString(date) {
+    return new Date(date).toLocaleDateString();
   }
 }

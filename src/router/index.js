@@ -26,5 +26,10 @@ export default new Router({
       name: "UserProfile",
       component: UserProfile,
     },
+    {
+      path: "/registration",
+      name: "Registration",
+      component: () => import("@/components/Registration.vue"),
+    },
   ],
 });

@@ -235,6 +235,8 @@ export default {
       // Implement subscription logic here
       this.subscribed = true;
       this.disabled = true;
+      //nevigate to registration page
+      this.$router.push("/registration");
     },
     cancel() {
       this.newTwootContent = "";
